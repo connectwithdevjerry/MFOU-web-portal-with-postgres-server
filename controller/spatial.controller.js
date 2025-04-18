@@ -56,9 +56,9 @@ const getPlotSearchResults = async (req, res) => {
   const { blockNumber, plotNumber } = req.query;
   console.log({ blockNumber, plotNumber });
   // const query = `SELECT * FROM plots AS p JOIN plots_attr AS pa ON p.id = pa.id WHERE pa.block_number = ? AND pa.plot_number = ?`;
-  const query = `SELECT * FROM plots WHERE block_number = ? AND plot_number = ?`;
+  const query = `SELECT * FROM plots WHERE block_number = $1 AND plot_number = $2`;
 
-  mycon.query(query, [blockNumber, plotNumber], (err, results, fields) => {
+  mycon.query(query, [Number(blockNumber), plotNumber], (err, results, fields) => {
     if (err) {
       console.error("Error executing query:", err);
       return res.status(400).json({ message: err.message, code: err.code });
@@ -67,7 +67,7 @@ const getPlotSearchResults = async (req, res) => {
     if (results.length === 0) {
       return res.status(404).json({ message: "Plot not found" });
     }
-    return res.status(200).json({ data: results[0] });
+    return res.status(200).json({ data: results.rows[0] });
   });
 };
 
