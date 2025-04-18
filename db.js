@@ -1,12 +1,27 @@
+const { Pool } = require('pg');
 const mysql = require("mysql2");
 require("dotenv").config();
 
-const mycon = mysql.createPool({
-  host: process.env.DB_HOST,
+const mycon = new Pool({
   user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
+  host: process.env.DB_HOST,
   database: process.env.DB_NAME,
-  connectionLimit: 10,
+  password: process.env.DB_PASSWORD,
+  port: 5432,
+  max: 20, // Max connections
+  idleTimeoutMillis: 30000, // Close idle connections after 30s
+  connectionTimeoutMillis: 2000, // Fail if connection takes >2s
 });
+
+async function queryWithPool() {
+  try {
+    const res = await mycon.query('SELECT * FROM blocks WHERE id = $1', [1]);
+    console.log('blocks-1:', res.rows[0]);
+  } catch (err) {
+    console.error('Error:', err);
+  }
+}
+
+queryWithPool();
 
 module.exports = mycon;
