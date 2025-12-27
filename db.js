@@ -7,7 +7,7 @@ const mycon = new Pool({
   host: process.env.DB_HOST,
   database: process.env.DB_NAME,
   password: process.env.DB_PASSWORD,
-  port: 3306,
+  port: 5432,
   max: 20, // Max connections
   idleTimeoutMillis: 30000, // Close idle connections after 30s
   connectionTimeoutMillis: 2000, // Fail if connection takes >2s
